@@ -12,8 +12,8 @@ const CONFIG = {
   sampleStep: 10,              // pixevnl step when sampling the PNG (higher = fewer dots)
 
   // Animation
-  liftHeight: 0.35,           // max lift in world units
-  influenceRadius: 1.2,       // radius around the pointer where dots are affected
+  liftHeight: 0.20,           // max lift in world units
+  influenceRadius: 0.3,       // radius around the pointer where dots are affected
   liftDamping: 0.18,          // interpolation factor towards target Y
 
   // Colors
@@ -70,8 +70,8 @@ function initRenderer(width, height, aspectMap) {
   controls.enablePan = false;
   controls.minDistance = 8;
   controls.maxDistance = 30;
-  controls.minPolarAngle = Math.PI / 4;
-  controls.maxPolarAngle = Math.PI / 2.1;
+  controls.minPolarAngle = Math.PI / 8;
+  controls.maxPolarAngle = Math.PI / 3;
   controls.autoRotate = false;
 
   // Lighting
