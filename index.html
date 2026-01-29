@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>3D Dotted World Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #999999;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #ffffff;
+    }
+
+    #app {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    /* Tooltip / popup */
+    #tooltip {
+      position: absolute;
+      min-width: 180px;
+      max-width: 260px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.95);
+      color: #f9fafb;
+      font-size: 12px;
+      line-height: 1.4;
+      pointer-events: none;
+      transform: translate(-50%, -120%);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.35);
+      opacity: 0;
+      transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+      z-index: 10;
+    }
+
+    #tooltip.visible {
+      opacity: 1;
+      transform: translate(-50%, -130%);
+    }
+
+    #tooltip-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    #tooltip-body {
+      opacity: 0.9;
+    }
+
+    /* Simple helper for mobile: tap hint (optional) */
+    #hint {
+      position: absolute;
+      left: 16px;
+      bottom: 16px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.75);
+      color: #e5e7eb;
+      font-size: 11px;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    @media (min-width: 768px) {
+      #hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <!-- WebGL renderer will append its canvas here -->
+    <div id="hint">Drag to rotate • Tap dots to open hotspots</div>
+
+    <div id="tooltip">
+      <div id="tooltip-title"></div>
+      <div id="tooltip-body"></div>
+    </div>
+  </div>
+
+  <!-- Three.js & OrbitControls via ES modules from CDN -->
+  <script type="module">
+    // Use esm.sh so that internal imports like `from "three"` are resolved correctly in the browser.
+    import * as THREE from "https://esm.sh/three@0.162.0";
+    import { OrbitControls } from "https://esm.sh/three@0.162.0/examples/jsm/controls/OrbitControls.js";
+    import { HOTSPOTS } from "./js/hotspots.config.js";
+
+    // Expose THREE, OrbitControls, HOTSPOTS to window so main.js can access them.
+    window.__THREE__ = THREE;
+    window.__OrbitControls__ = OrbitControls;
+    window.__HOTSPOTS__ = HOTSPOTS;
+
+    // Dynamically import main.js AFTER globals are set,
+    // so it can safely read window.__THREE__/__OrbitControls__/__HOTSPOTS__.
+    import("./js/main.js");
+  </script>
+</body>
+
+</html>
