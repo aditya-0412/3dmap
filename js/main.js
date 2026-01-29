@@ -279,6 +279,35 @@ function handlePointerClick(event) {
   hideTooltip();
 }
 
+/** Handle hover over hotspots (show tooltip without click). */
+function handlePointerHover(event) {
+  if (!instancedMesh) return;
+  if (isPointerDown) return; // don't trigger tooltips while dragging to rotate
+
+  updatePointer(event);
+  raycaster.setFromCamera(pointer, camera);
+
+  const hits = raycaster.intersectObject(instancedMesh, false);
+  if (hits.length > 0) {
+    const hit = hits[0];
+    const instanceId = hit.instanceId;
+    if (instanceId == null) return;
+
+    const hotspot = hotspotByInstanceId.get(instanceId);
+    if (hotspot) {
+      // Avoid redundant DOM work if we're still on the same hotspot
+      if (lastHoveredHotspotId !== hotspot.id) {
+        showTooltipForHotspot(instanceId, hotspot);
+      } else {
+        updateTooltipPosition();
+      }
+      return;
+    }
+  }
+
+  hideTooltip();
+}
+
 /** Convert 3D world position to 2D screen coords. */
 function worldToScreen(pos) {
   const vector = pos.clone().project(camera);
@@ -356,6 +385,7 @@ function setupEvents() {
 
   canvas.addEventListener("pointermove", (e) => {
     updatePointer(e);
+    handlePointerHover(e);
   });
 
   canvas.addEventListener("pointerdown", (e) => {
@@ -369,6 +399,7 @@ function setupEvents() {
 
   canvas.addEventListener("pointerleave", () => {
     hoverPoint = null;
+    hideTooltip();
   });
 }
 
